@@ -2,51 +2,62 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import urllib3
+from datetime import datetime, timedelta
 
-# Evitar errores de seguridad
+# Desactivar advertencias de seguridad
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class ScraperAgricola:
-    def __init__(self, fecha):
-        self.fecha = fecha
+    def __init__(self, fecha_inicio, fecha_fin):
+        self.inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
+        self.fin = datetime.strptime(fecha_fin, "%d/%m/%Y")
         self.url = "https://old.emmsa.com.pe/emmsa_spv/app/reportes/ajax/rpt07_gettable_new_web.php"
-        self.datos = []
+        self.datos_totales = []
 
     def obtener_datos_emmsa(self):
-        payload = {
-            'vid_tipo': '1',
-            'vprod': '81,73,12,38',
-            'vvari': '8105,8106,8107,8111,8115,8118,7301,7302,7303,7305,1201,1202,1203,1204,3801,3802,3803,3804,3805,3806,3807,3808,3809,3810,3811,3812,3813,3814,3815,3816,3817,3818',
-            'vfecha': self.fecha
-        }
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-        
-        # OJO: Estamos usando 2024 para obtener datos reales. 
-        # En la sustentación, si la profesora pregunta, di que es por datos históricos.
-        respuesta = requests.post(self.url, data=payload, headers=headers, verify=False)
-        
-        if respuesta.status_code == 200:
-            self._procesar_tabla(respuesta.text)
-        else:
-            print(f"Error: {respuesta.status_code}")
+        # Bucle para recorrer cada día de la semana
+        fecha_actual = self.inicio
+        while fecha_actual <= self.fin:
+            fecha_str = fecha_actual.strftime("%d/%m/%Y")
+            print(f"Extrayendo datos para: {fecha_str}")
+            
+            payload = {
+                'vid_tipo': '1',
+                'vprod': '81,73,12,38',
+                'vvari': '8105,8106,8107,8111,8115,8118,7301,7302,7303,7305,1201,1202,1203,1204,3801,3802,3803,3804,3805,3806,3807,3808,3809,3810,3811,3812,3813,3814,3815,3816,3817,3818',
+                'vfecha': fecha_str
+            }
+            
+            headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+            respuesta = requests.post(self.url, data=payload, headers=headers, verify=False)
+            
+            if respuesta.status_code == 200:
+                self._procesar_tabla(respuesta.text, fecha_str)
+            
+            fecha_actual += timedelta(days=1) # Avanzar un día
+            
+        # Guardar todo el consolidado al final
+        df = pd.DataFrame(self.datos_totales)
+        df.to_csv('precios_semana_emmsa.csv', index=False)
+        print("¡Proceso terminado! Archivo 'precios_semana_emmsa.csv' creado.")
 
-    def _procesar_tabla(self, html):
+    def _procesar_tabla(self, html, fecha):
         soup = BeautifulSoup(html, 'html.parser')
         tabla = soup.find('table', {'class': 'timecard'})
-        filas = tabla.find_all('tr')
-        
-        for fila in filas[1:]: # Saltamos cabecera
-            celdas = fila.find_all('td')
-            if len(celdas) >= 5: # Ahora pedimos al menos 5 columnas
-                producto = celdas[0].text.strip()
-                variedad = celdas[1].text.strip()
-                p_min = celdas[2].text.strip()
-                p_max = celdas[3].text.strip()
-                p_prom = celdas[4].text.strip()
-                
-                print(f"Extraído: {producto} - {variedad} | Min: {p_min} Max: {p_max} Prom: {p_prom}")
-                self.datos.append({'Producto': producto, 'Variedad': variedad, 'Min': p_min, 'Max': p_max, 'Prom': p_prom})
+        if tabla:
+            filas = tabla.find_all('tr')
+            for fila in filas[1:]:
+                celdas = fila.find_all('td')
+                if len(celdas) >= 5:
+                    self.datos_totales.append({
+                        'Fecha': fecha,
+                        'Producto': celdas[0].text.strip(),
+                        'Variedad': celdas[1].text.strip(),
+                        'Min': celdas[2].text.strip(),
+                        'Max': celdas[3].text.strip(),
+                        'Prom': celdas[4].text.strip()
+                    })
 
 if __name__ == "__main__":
-    scraper = ScraperAgricola("17/06/2024")
+    scraper = ScraperAgricola("17/06/2024", "24/06/2024")
     scraper.obtener_datos_emmsa()
