@@ -8,14 +8,20 @@ from datetime import datetime, timedelta
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class ScraperAgricola:
+    """
+    Clase encargada de realizar el web scraping a la plataforma de EMMSA.
+    Extrae precios diarios de productos agrícolas en un rango de fechas.
+    """
+    
     def __init__(self, fecha_inicio, fecha_fin):
+        """Inicializa el scraper con un rango de fechas."""
         self.inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
         self.fin = datetime.strptime(fecha_fin, "%d/%m/%Y")
         self.url = "https://old.emmsa.com.pe/emmsa_spv/app/reportes/ajax/rpt07_gettable_new_web.php"
         self.datos_totales = []
 
     def obtener_datos_emmsa(self):
-        # Bucle para recorrer cada día de la semana
+        """Itera por cada fecha, solicita los datos al servidor y los consolida."""
         fecha_actual = self.inicio
         while fecha_actual <= self.fin:
             fecha_str = fecha_actual.strftime("%d/%m/%Y")
@@ -34,14 +40,14 @@ class ScraperAgricola:
             if respuesta.status_code == 200:
                 self._procesar_tabla(respuesta.text, fecha_str)
             
-            fecha_actual += timedelta(days=1) # Avanzar un día
+            fecha_actual += timedelta(days=1)
             
-        # Guardar todo el consolidado al final
         df = pd.DataFrame(self.datos_totales)
         df.to_csv('precios_semana_emmsa.csv', index=False)
         print("¡Proceso terminado! Archivo 'precios_semana_emmsa.csv' creado.")
 
     def _procesar_tabla(self, html, fecha):
+        """Limpia el HTML recibido y extrae los datos de la tabla."""
         soup = BeautifulSoup(html, 'html.parser')
         tabla = soup.find('table', {'class': 'timecard'})
         if tabla:
