@@ -101,11 +101,45 @@ class ScraperAgricola:
             fecha_actual += timedelta(days=1)
             
         print(f"¡Se extrajeron {len(self.datos_midagri)} registros totales de MIDAGRI!")
+    
+    def exportar_a_csv(self):
+
+        """Modifica/crea el método para recibir los datos de ambas fuentes 
+
+        (EMMSA + MIDAGRI) y usa pd.concat para unirlos en un solo CSV.
+
+        """
+        try:
+
+            df_emmsa = pd.read_csv('precios_semana_emmsa.csv')
+
+            df_midagri = pd.read_csv('precios_semana_midagri.csv')
+
+            if 'Min' not in df_midagri.columns:
+
+                df_midagri['Min'] = ""
+
+            if 'Max' not in df_midagri.columns:
+
+                df_midagri['Max'] = ""
+
+            df_final = pd.concat([df_emmsa, df_midagri], ignore_index=True)
+
+
+            df_final.to_csv('precios_agricolas_consolidado.csv', index=False)
+
+            print("¡Archivo 'precios_agricolas_consolidado.csv' generado con éxito!")
+
+            
+
+        except FileNotFoundError as e:
+
+            print(f"Error: Faltan archivos previos para consolidar. Detalle: {e}")
         
         if self.datos_midagri:
             df_midagri = pd.DataFrame(self.datos_midagri)
             df_midagri.to_csv('precios_semana_midagri.csv', index=False)
-            print("¡Archivo 'precios_semana_midagri.csv' creado con toda la semana!")
+            print("Archivo 'precios_semana_midagri.csv' creado.")
                 
       
 
@@ -114,3 +148,4 @@ if __name__ == "__main__":
     scraper = ScraperAgricola("17/06/2026", "24/06/2026")
     scraper.obtener_datos_emmsa()
     scraper.obtener_datos_midagri()
+    scraper.exportar_a_csv()
