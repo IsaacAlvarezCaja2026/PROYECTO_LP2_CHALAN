@@ -63,7 +63,54 @@ class ScraperAgricola:
                         'Max': celdas[3].text.strip(),
                         'Prom': celdas[4].text.strip()
                     })
+    def obtener_datos_midagri(self):
+        """Extrae datos de MIDAGRI (Precios Minoristas) iterando por el rango de fechas."""
+        self.datos_midagri = []
+        
+        fecha_actual = self.inicio
+        
+        while fecha_actual <= self.fin:
+            fecha_str = fecha_actual.strftime("%d/%m/%Y")
+            print(f"Extrayendo datos de MIDAGRI para: {fecha_str}")
+            
+            # URL actualizada con 'min_precio_prom' y 'periodicidad=dia'
+            url_ajax = f"http://sistemas.midagri.gob.pe/sisap/portal2/ciudades/resumenes/filtrar?&region=*&&variables[]=min_precio_prom&&fecha={fecha_str}&desde=17/06/2026&&hasta=24/06/2026&&anios[]=2026&&meses[]=06&&&productos[]=010101&productos[]=010103&productos[]=061701&productos[]=061703&productos[]=062607&&periodicidad=dia&&&&&&&&&&__ajax_carga_final=consulta&ajax=true"
+            
+            try:
+                respuesta = requests.get(url_ajax, verify=False)
+                
+                if respuesta.status_code == 200:
+                    soup = BeautifulSoup(respuesta.text, 'html.parser')
+                    tabla = soup.find('table') 
+                    
+                    if tabla:
+                        filas = tabla.find_all('tr')
+                        for fila in filas[3:]: 
+                            celdas = fila.find_all('td')
+                            
+                            # Validamos que haya al menos 4 celdas (Producto, Unidad, Equiv, Precio)
+                            if len(celdas) >= 4:
+                                self.datos_midagri.append({
+                                    'Fecha': fecha_str,  
+                                    'Producto': celdas[0].text.strip(),                         
+                                    'Prom': celdas[3].text.strip()      
+                                })
+            except Exception as e:
+                print(f"Error en MIDAGRI para la fecha {fecha_str}: {e}")
+                
+            fecha_actual += timedelta(days=1)
+            
+        print(f"¡Se extrajeron {len(self.datos_midagri)} registros totales de MIDAGRI!")
+        
+        if self.datos_midagri:
+            df_midagri = pd.DataFrame(self.datos_midagri)
+            df_midagri.to_csv('precios_semana_midagri.csv', index=False)
+            print("¡Archivo 'precios_semana_midagri.csv' creado con toda la semana!")
+                
+      
+
 
 if __name__ == "__main__":
-    scraper = ScraperAgricola("17/06/2024", "24/06/2024")
+    scraper = ScraperAgricola("17/06/2026", "24/06/2026")
     scraper.obtener_datos_emmsa()
+    scraper.obtener_datos_midagri()
