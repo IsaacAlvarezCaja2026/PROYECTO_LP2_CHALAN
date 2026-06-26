@@ -1,4 +1,5 @@
 import requests
+import re
 import pandas as pd
 from bs4 import BeautifulSoup
 import urllib3
@@ -101,6 +102,11 @@ class ScraperAgricola:
             fecha_actual += timedelta(days=1)
             
         print(f"¡Se extrajeron {len(self.datos_midagri)} registros totales de MIDAGRI!")
+
+        if self.datos_midagri:
+            df_midagri = pd.DataFrame(self.datos_midagri)
+            df_midagri.to_csv('precios_semana_midagri.csv', index=False)
+            print("Archivo 'precios_semana_midagri.csv' creado.")
     
     def exportar_a_csv(self):
 
@@ -129,17 +135,53 @@ class ScraperAgricola:
             df_final.to_csv('precios_agricolas_consolidado.csv', index=False)
 
             print("¡Archivo 'precios_agricolas_consolidado.csv' generado con éxito!")
-
-            
-
+    
+    
         except FileNotFoundError as e:
 
             print(f"Error: Faltan archivos previos para consolidar. Detalle: {e}")
+
+    def validar_precio_regex(self, precio_texto):
+        """
+        Usa expresiones regulares para validar que el precio sea un número.
+        Extrae solo el valor numérico y descarta cualquier texto extraño.
+        """
+        if pd.isna(precio_texto) or precio_texto == "":
+            return ""
+            
+        precio_str = str(precio_texto).strip()
         
-        if self.datos_midagri:
-            df_midagri = pd.DataFrame(self.datos_midagri)
-            df_midagri.to_csv('precios_semana_midagri.csv', index=False)
-            print("Archivo 'precios_semana_midagri.csv' creado.")
+        # REGEX: Busca un patrón que contenga números enteros, un punto opcional y decimales
+        # Esto ignorará textos extraños como "S/", "Precio Prom.", etc.
+        resultado = re.search(r'\d+\.?\d*', precio_str)
+        
+        if resultado:
+            return float(resultado.group()) 
+        
+        return "" 
+
+    def limpiar_y_validar_datos(self):
+        """
+        Aplica la validación regex al archivo consolidado y limpia filas basura.
+        """
+        print("Iniciando validación de precios con Regex...")
+        
+        try:
+            df = pd.read_csv('precios_agricolas_consolidado.csv')
+            
+            df = df[df['Producto'] != 'Precio Prom.']
+            df = df[df['Producto'] != 'Fecha']
+            
+            for col in ['Min', 'Max', 'Prom']:
+                if col in df.columns:
+                    # Usamos .apply para pasar cada celda por nuestra función regex
+                    df[col] = df[col].apply(self.validar_precio_regex)
+            
+            df.to_csv('precios_agricolas_validado.csv', index=False)
+            print("¡Validación exitosa! Archivo final 'precios_agricolas_validado.csv' generado y listo para graficar.")
+            
+        except FileNotFoundError:
+            print("Error: No se encontró el archivo consolidado. Ejecuta el paso anterior primero.")
                 
       
 
