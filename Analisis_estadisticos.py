@@ -8,4 +8,16 @@ class AnalizadorPrecios:
         self.df["Min"] = pd.to_numeric(self.df["Min"], errors="coerce")
         self.df["Max"] = pd.to_numeric(self.df["Max"], errors="coerce")
 
+## Análisis temporal
+    
+    def variedades_por_producto(self):
+            """Cuántas variedades distintas tiene cada producto."""
+
+            resultado = (
+                self.df.groupby("Producto")["Variedad"]
+                .nunique()
+                .sort_values(ascending=False)
+            )
+
+            return resultado
 
