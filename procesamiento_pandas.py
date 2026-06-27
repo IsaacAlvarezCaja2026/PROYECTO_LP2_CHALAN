@@ -38,7 +38,7 @@ class ProcesadorPrecios:
             self.df["Mes"] = self.df["Fecha"].dt.month_name()
     
             print("Transformación completada.")
-    
+## Añadimos analisis estadistico    
     def estadisticas_generales(self):
             """Muestra estadísticas descriptivas."""
     
