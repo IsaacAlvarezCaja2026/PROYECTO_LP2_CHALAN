@@ -4,6 +4,7 @@ class ProcesadorPrecios:
 
     def __init__(self):
         self.df = pd.read_csv("precios_agricolas_consolidado.csv")
+## Limpieza de datos 
     def limpiar_datos(self):
             """Limpia y transforma los datos."""
     
