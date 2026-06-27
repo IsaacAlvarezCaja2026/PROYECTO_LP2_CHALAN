@@ -37,3 +37,18 @@ class AnalizadorPrecios:
             ]
 
             return alertas[["Fecha", "Producto", "Variedad", "Prom", "Cambio_%"]]
+    
+##Precios por fecha
+    def precio_en_fecha(self, fecha: str):
+            """Precios de todos los productos en una fecha específica."""
+
+            fecha_dt = pd.to_datetime(fecha, format="%d/%m/%Y")
+
+            resultado = (
+                self.df[self.df["Fecha"] == fecha_dt]
+                [["Producto", "Variedad", "Min", "Max", "Prom"]]
+                .sort_values("Producto")
+            )
+
+            return resultado
+
