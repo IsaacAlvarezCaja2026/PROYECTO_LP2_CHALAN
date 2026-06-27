@@ -52,3 +52,13 @@ class AnalizadorPrecios:
 
             return resultado
 
+## Exportamos datos
+    def exportar_resultados(self):
+            """Guarda los resultados de los análisis en archivos CSV."""
+
+            self.alertas_precio().to_csv("alertas_precio.csv")
+
+            self.variedades_por_producto().to_csv("variedades_por_producto.csv")
+
+            print("Archivos exportados correctamente.")
+
