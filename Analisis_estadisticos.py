@@ -20,4 +20,20 @@ class AnalizadorPrecios:
             )
 
             return resultado
+## Detección de anomalías
+    def alertas_precio(self, umbral_subida: float = 10.0, umbral_bajada: float = -10.0):
+            """Detecta variaciones bruscas entre fechas consecutivas por variedad."""
 
+            df_ord = self.df.sort_values(["Variedad", "Fecha"]).copy()
+
+            df_ord["Cambio_%"] = (
+                df_ord.groupby("Variedad")["Prom"]
+                .pct_change() * 100
+            ).round(2)
+
+            alertas = df_ord[
+                (df_ord["Cambio_%"] >= umbral_subida) |
+                (df_ord["Cambio_%"] <= umbral_bajada)
+            ]
+
+            return alertas[["Fecha", "Producto", "Variedad", "Prom", "Cambio_%"]]
