@@ -82,7 +82,7 @@ class ProcesadorPrecios:
             )
     
             return volatilidad
-    
+## Exportamos datos    
     def exportar_resultados(self):
             """Guarda los resultados."""
     
