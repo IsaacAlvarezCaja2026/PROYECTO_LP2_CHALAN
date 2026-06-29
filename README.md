@@ -80,7 +80,9 @@ Finalmente, ejecutar el visualizador para renderizar y guardar los gráficos PNG
 python visualizador.py
 ```
 
-👥 Integrantes del Equipo
+---
+
+## 👥 Integrantes del Equipo
 
 Nicole Alva Aquino - **Nalva19** - 2021388
 
