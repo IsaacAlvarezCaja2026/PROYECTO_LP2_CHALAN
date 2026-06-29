@@ -58,6 +58,7 @@ Primero, descarga el código desde la nube a tu computadora. Abre tu terminal (G
 ```bash
 git clone https://github.com/IsaacAlvarezCaja2026/PROYECTO_LP2_CHALAN.git
 cd PROYECTO_LP2_CHALAN
+```
 
 **2. Instalación de dependencias:**
 Una vez dentro de la carpeta del proyecto, instala las librerías necesarias ejecutando:
