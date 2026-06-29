@@ -23,7 +23,7 @@ El proyecto está construido bajo el paradigma de **Programación Orientada a Ob
 
 El sistema está dividido en módulos independientes para garantizar un código limpio y escalable:
 
-1. **Módulo de Extracción (`scraper.py`):** * Se conecta mediante solicitudes HTTP (`requests`) a las plataformas de EMMSA (POST) y MIDAGRI (GET).
+1. **Módulo de Extracción (`scraper.py`):**  Se conecta mediante solicitudes HTTP (`requests`) a las plataformas de EMMSA (POST) y MIDAGRI (GET).
    * Utiliza `BeautifulSoup` para analizar el HTML y extraer las tablas de precios de toda una semana.
    * Implementa validación y limpieza de cadenas mediante **Expresiones Regulares (Regex)** para asegurar que los precios sean numéricos.
 
@@ -51,7 +51,7 @@ El sistema está dividido en módulos independientes para garantizar un código 
 
 ## ⚙️ Instrucciones de Ejecución
 
-Para que el proyecto funcione correctamente en un entorno local, se deben seguir los siguientes pasos en estricto orden:
+Para que el proyecto funcione correctamente en un entorno local o en la computadora, debemos ejecutar los siguientes pasos:
 
 **1. Instalación de dependencias:**
 Abrir la terminal en la carpeta del proyecto y ejecutar:
