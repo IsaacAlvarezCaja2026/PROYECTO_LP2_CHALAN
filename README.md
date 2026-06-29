@@ -8,16 +8,6 @@
 
 ### Práctica Dirigida 3: Sistema de Monitoreo de Precios Agrícolas del Perú 🥔🥑
 
-**Integrantes del equipo:**
-
-* Nicole Alva Aquino  Nalva19  2021388
-
-* Alvarez Caja Isaac  IsaacAlvarezCaja  20221389
-
-* Huarac Vega César  notmecj0  20231495
-
-* Quintana Andy Mayta  andykmq  20190234
-
 ---
 
 ## 📋 Descripción del Proyecto
@@ -65,5 +55,41 @@ Para que el proyecto funcione correctamente en un entorno local, se deben seguir
 
 **1. Instalación de dependencias:**
 Abrir la terminal en la carpeta del proyecto y ejecutar:
+
 ```bash
 pip install -r Requerimientos.txt
+```
+
+**2. Extracción y validación de datos:**
+Ejecutar el script principal de scraping para descargar los datos de internet y generar el archivo consolidado y validado:
+
+```Bash
+python scraper.py
+```
+
+**3. Análisis y estadísticas:**
+Ejecutar los scripts de procesamiento para generar los CSVs con los resúmenes estadísticos (alertas_precio.csv, resumen_productos.csv, etc.):
+```Bash
+python procesamiento_pandas.py
+python Analisis_estadisticos.py
+```
+
+**4. Generación de Reportes Visuales:**
+Finalmente, ejecutar el visualizador para renderizar y guardar los gráficos PNG en alta resolución:
+```Bash
+python visualizador.py
+```
+
+👥 Integrantes del Equipo
+
+Nicole Alva Aquino - **Nalva19** - 2021388
+
+Isaac Alvarez Caja - **IsaacAlvarezCaja2026** - 20221389
+
+César Huarac Vega - **notmecj0** - 20231495
+
+Junior Jesus Mena Mamani - **haksito** - 20241389
+
+Sergio Mendoza Chavez - **290803S** - 20231499
+
+Andy Mayta Quintana - **andykmq** - 20190234
