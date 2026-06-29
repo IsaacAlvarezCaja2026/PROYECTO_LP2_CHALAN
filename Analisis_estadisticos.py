@@ -62,3 +62,8 @@ class AnalizadorPrecios:
 
             print("Archivos exportados correctamente.")
 
+if __name__ == "__main__":
+    analizador = AnalizadorPrecios()
+    print("Iniciando análisis estadístico...")
+    analizador.exportar_resultados()
+    print("¡Análisis estadístico finalizado y archivos CSV generados!")

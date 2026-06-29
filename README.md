@@ -68,7 +68,7 @@ python scraper.py
 ```
 
 **3. Análisis y estadísticas:**
-Ejecutar los scripts de procesamiento para generar los CSVs con los resúmenes estadísticos (alertas_precio.csv, resumen_productos.csv, etc.):
+Ejecutar los scripts de procesamiento para generar los CSVs con los resúmenes estadísticos (alertas_precio.csv, resumen_productos.csv, variedades_por_producto.csv, productos_volatiles.csv):
 ```Bash
 python procesamiento_pandas.py
 python Analisis_estadisticos.py

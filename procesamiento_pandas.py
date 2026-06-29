@@ -95,3 +95,15 @@ class ProcesadorPrecios:
             )
     
             print("Archivos exportados correctamente.")
+
+if __name__ == "__main__":
+    procesador = ProcesadorPrecios()
+    print("Iniciando procesamiento de Pandas...")
+    procesador.limpiar_datos()
+    procesador.transformar_datos()
+    
+    print("\n--- Estadísticas Generales ---")
+    procesador.estadisticas_generales()
+    
+    procesador.exportar_resultados()
+    print("¡Procesamiento de Pandas finalizado con éxito!")
