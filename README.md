@@ -49,33 +49,39 @@ El sistema está dividido en módulos independientes para garantizar un código 
 
 ---
 
-## ⚙️ Instrucciones de Ejecución
+## ⚙️ Instrucciones de Ejecución (Guía de Clonación y Uso)
 
-Para que el proyecto funcione correctamente en un entorno local o en la computadora, debemos ejecutar los siguientes pasos:
+Para que el proyecto funcione correctamente en un entorno local, sigue esta guía paso a paso:
 
-**1. Instalación de dependencias:**
-Abrir la terminal en la carpeta del proyecto y ejecutar:
+**1. Clonar el repositorio:**
+Primero, descarga el código desde la nube a tu computadora. Abre tu terminal (Git Bash o la terminal de tu sistema) y ejecuta:
+```bash
+git clone https://github.com/IsaacAlvarezCaja2026/PROYECTO_LP2_CHALAN.git
+cd PROYECTO_LP2_CHALAN
+
+**2. Instalación de dependencias:**
+Una vez dentro de la carpeta del proyecto, instala las librerías necesarias ejecutando:
 
 ```bash
 pip install -r Requerimientos.txt
 ```
 
-**2. Extracción y validación de datos:**
-Ejecutar el script principal de scraping para descargar los datos de internet y generar el archivo consolidado y validado:
+**3. Extracción y validación de datos:**
+Ejecuta el script principal de scraping. Esto descargará los datos en vivo de internet y generará el archivo consolidado y validado de forma automática:
 
 ```Bash
 python scraper.py
 ```
 
-**3. Análisis y estadísticas:**
-Ejecutar los scripts de procesamiento para generar los CSVs con los resúmenes estadísticos (alertas_precio.csv, resumen_productos.csv, variedades_por_producto.csv, productos_volatiles.csv):
+**4. Análisis y estadísticas:**
+Ejecuta los motores de procesamiento para que Pandas limpie la data y genere los CSVs con los resúmenes estadísticos (alertas_precio.csv, resumen_productos.csv, variedades_por_producto.csv, productos_volatiles.csv):
 ```Bash
 python procesamiento_pandas.py
 python Analisis_estadisticos.py
 ```
 
-**4. Generación de Reportes Visuales:**
-Finalmente, ejecutar el visualizador para renderizar y guardar los gráficos PNG en alta resolución:
+**5. Generación de Reportes Visuales:**
+Finalmente, ejecuta el visualizador para renderizar los datos y guardar los gráficos PNG gerenciales en alta resolución:
 ```Bash
 python visualizador.py
 ```
