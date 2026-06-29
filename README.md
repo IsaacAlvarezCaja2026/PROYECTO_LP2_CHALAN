@@ -8,3 +8,4 @@
 
 **Integrantes del equipo:**
 * Nicole Alva Aquino Nalva19 2021388
+* Andy Mayta Quintana andykmq  20190234
