@@ -191,3 +191,4 @@ if __name__ == "__main__":
     scraper.obtener_datos_emmsa()
     scraper.obtener_datos_midagri()
     scraper.exportar_a_csv()
+    scraper.limpiar_y_validar_datos()
