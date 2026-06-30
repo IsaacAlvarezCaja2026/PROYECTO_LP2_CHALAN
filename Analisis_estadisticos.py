@@ -74,3 +74,8 @@ if __name__ == "__main__":
     analizador = AnalizadorPrecios()
     analizador.exportar_resultados()
 
+if __name__ == "__main__":
+    analizador = AnalizadorPrecios()
+    print("Iniciando análisis estadístico...")
+    analizador.exportar_resultados()
+    print("¡Análisis estadístico finalizado y archivos CSV generados!")
